@@ -245,6 +245,15 @@ TSCLanguageVisitor >> visitCTranslationUnit: aTSNode withFields: fields [
 ]
 
 { #category : 'visiting' }
+TSCLanguageVisitor >> visitCTypeDefinition: aTSNode withFields: fields [
+ ^ {
+       self visitKey: 'type' inDictionnary: fields.
+       self visitKey: 'declarator' inDictionnary: fields.
+   }
+
+]
+
+{ #category : 'visiting' }
 TSCLanguageVisitor >> visitCTypeIdentifier: aTSNode withFields: fields [
  ^ {
    }

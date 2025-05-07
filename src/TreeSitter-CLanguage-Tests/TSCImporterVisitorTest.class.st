@@ -362,3 +362,63 @@ TSCImporterVisitorTest >> testStructTypeVarExcludedFromModel [
 		assert: (importer model allWithType: FamixCStruct) size
 		equals: 1
 ]
+
+{ #category : 'tests' }
+TSCImporterVisitorTest >> testTypedefForStruct [
+
+	| sourceCode |
+	sourceCode := '
+	typedef struct Person {
+    int id;
+	} Person;
+	'.
+
+	importer importFromString: sourceCode.
+
+	self
+		assert: (importer model allWithType: FamixCAliasType) size
+		equals: 1.
+	self
+		assert: (importer model allWithType: FamixCAliasType) anyOne name
+		equals: 'Person'
+]
+
+{ #category : 'tests' }
+TSCImporterVisitorTest >> testTypedefName [
+
+	| sourceCode |
+	sourceCode := '
+	typedef int Integer;
+	'.
+
+	importer importFromString: sourceCode.
+
+	self
+		assert: (importer model allWithType: FamixCAliasType) size
+		equals: 1.
+	self
+		assert: (importer model allWithType: FamixCAliasType) anyOne name
+		equals: 'Integer'
+]
+
+{ #category : 'tests' }
+TSCImporterVisitorTest >> testTypedefSourceAnchor [
+
+	| sourceCode |
+	"              0                  20"
+	"              v                  v"
+	sourceCode := 'typedef int Integer;'.
+
+	importer importFromString: sourceCode.
+
+	self
+		assert:
+			(importer model allWithType: FamixCAliasType) anyOne sourceAnchor
+				startPos
+		equals: 0.
+	self
+		assert:
+		(importer model allWithType: FamixCAliasType) anyOne sourceAnchor
+			endPos
+		equals: 20
+]
